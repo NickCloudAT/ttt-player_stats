@@ -56,7 +56,7 @@ end } )
 
 function PSTATS_DATA.MYSQL:PlayerJoined(ply)
   local uid = ply:SteamID64()
-
+	
   query("SELECT kills, headshots, deaths, wins FROM pstats WHERE player = " .. uid, function(data)
     if table.Count( data ) <= 0 then
       query("INSERT into pstats (player, kills, headshots, deaths, wins) VALUES (" .. uid .. ", 0, 0, 0, 0)", function()

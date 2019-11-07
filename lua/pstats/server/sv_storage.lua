@@ -24,17 +24,21 @@ end
 -- Add to stats
 
 function PSTATS_DATA:AddKills(id64, value)
+  if not PSTATS_DATA:IsCached(id64) then return end
   PSTATS_DATA.cache_table[tostring(id64)].kills = PSTATS_DATA.cache_table[tostring(id64)].kills+value
 end
 
 function PSTATS_DATA:AddHeadshots(id64, value)
+  if not PSTATS_DATA:IsCached(id64) then return end
   PSTATS_DATA.cache_table[tostring(id64)].headshots = PSTATS_DATA.cache_table[tostring(id64)].headshots+value
 end
 
 function PSTATS_DATA:AddDeaths(id64, value)
+  if not PSTATS_DATA:IsCached(id64) then return end
   PSTATS_DATA.cache_table[tostring(id64)].deaths = PSTATS_DATA.cache_table[tostring(id64)].deaths+value
 end
 
 function PSTATS_DATA:AddWins(id64, value)
+  if not PSTATS_DATA:IsCached(id64) then return end
   PSTATS_DATA.cache_table[tostring(id64)].wins = PSTATS_DATA.cache_table[tostring(id64)].wins+value
 end

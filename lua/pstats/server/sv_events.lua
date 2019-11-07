@@ -20,5 +20,9 @@ hook.Add("PlayerDeath", "PSTATS_DEATH", function(ply, inflictor, attacker)
 end)
 
 hook.Add("TTTEndRound", "PSTATS_WIN", function(result)
-  print("WINRESULT: " .. tostring(result))
+  for k, v in ipairs(player.GetAll()) do
+    if v:GetTeam() == result then
+      PSTATS_DATA:AddWins(v:SteamID64(), 1)
+    end
+  end
 end)

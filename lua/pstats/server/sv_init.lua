@@ -8,3 +8,7 @@ include("sv_mysql.lua")
 include("sv_storage.lua")
 include("sv_events.lua")
 include("sv_cache.lua")
+include("sv_stats.lua")
+
+
+AddCSLuaFile("pstats/client/cl_stats.lua")
