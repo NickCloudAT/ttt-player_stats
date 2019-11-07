@@ -28,7 +28,7 @@ hook.Add("TTTEndRound", "PSTATS_WIN", function(result)
 end)
 
 hook.Add("PlayerDisconnected", "PSTATS_HANDLE_QUIT", function(ply)
-  if not IsValid(ply) or not PSTATS_DATA:IsCached(ply:SteamID64()) then return end
+  if not IsValid(ply) or ply:IsBot() or not PSTATS_DATA:IsCached(ply:SteamID64()) then return end
 
   PSTATS_DATA:UpdatePlayer(ply:SteamID64())
 
@@ -38,5 +38,6 @@ hook.Add("PlayerDisconnected", "PSTATS_HANDLE_QUIT", function(ply)
     index = index +1
     if p == ply:SteamID64() then break end
   end
-  print("INDEX QUIT: " .. index)
+
+  table.remove(PSTATS_DATA.cache_table, index)
 end)
