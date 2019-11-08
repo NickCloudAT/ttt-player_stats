@@ -1,6 +1,7 @@
-surface.CreateFont("PSTATS_Page", {
-		font = "DermaDefault",
-		size = 18
+surface.CreateFont("PSTATS_Def", {
+		font = "Arial",
+		size = 18,
+		weight = 1500,
 })
 
 local weapon_tbl = {}
@@ -58,6 +59,7 @@ local function OpenStatsAll()
   list:AddColumn("Wins")
 
 	for p in pairs(statsTable) do
+		if not player.GetBySteamID64(p) then continue end
 		local plyName = player.GetBySteamID64(p):Nick()
 
 		list:AddLine(plyName, statsTable[p].kills, statsTable[p].headshots, math.Round(statsTable[p].kills/statsTable[p].deaths, 2), statsTable[p].deaths, statsTable[p].wins)
@@ -66,6 +68,36 @@ local function OpenStatsAll()
 
 end
 net.Receive("PSTATS_OpenStatsAll", OpenStatsAll)
+
+local function OpenStatsChooser()
+	Frame = vgui.Create("DFrame")
+	Frame:SetSize(300, 250)
+	Frame:SetTitle("")
+	Frame:MakePopup()
+	Frame:Center()
+
+	button_own = vgui.Create("DButton", Frame)
+	button_own:SetText("Own Stats")
+	button_own:SetFont("PSTATS_Def")
+	button_own:SetPos(25, 50)
+	button_own:SetSize(250, 50)
+	button_own.DoClick = function()
+		Frame:Close()
+		net.Start("PSTATS_AskOpenStats")
+		net.SendToServer()
+	end
+
+	button_all = vgui.Create("DButton", Frame)
+	button_all:SetText("Online Stats")
+	button_all:SetFont("PSTATS_Def")
+	button_all:SetPos(25, 150)
+	button_all:SetSize(250, 50)
+	button_all.DoClick = function()
+		Frame:Close()
+		net.Start("PSTATS_AskOpenStatsAll")
+		net.SendToServer()
+	end
+end
 
 
 concommand.Add("pstats_stats", function(ply, cmd, args, argStr)
@@ -119,7 +151,6 @@ end)
 
 hook.Add("Initialize", "PSTATS_KEY_BIND", function()
 	bind.Register("pstats_open_stats", function()
-		net.Start("PSTATS_AskOpenStats")
-		net.SendToServer()
+		OpenStatsChooser()
 	end, nil, "Other Bindings", "Open PStats", nil)
 end)
