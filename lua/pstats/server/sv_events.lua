@@ -21,7 +21,7 @@ end)
 
 hook.Add("TTTEndRound", "PSTATS_WIN", function(result)
   for k, v in ipairs(player.GetAll()) do
-    if v:GetTeam() == result then
+    if v:GetTeam() == result and not v:GetForceSpec() then
       PSTATS_DATA:AddWins(v:SteamID64(), 1)
     end
   end

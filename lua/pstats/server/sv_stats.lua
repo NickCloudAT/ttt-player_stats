@@ -2,7 +2,7 @@ if not SERVER then return end
 
 util.AddNetworkString("PSTATS_AskOpenStats")
 util.AddNetworkString("PSTATS_OpenStats")
-util.AddNetworkString("PSTATS_OpenStatsOther")
+util.AddNetworkString("PSTATS_AskOpenStatsOther")
 
 
 net.Receive("PSTATS_AskOpenStats", function(len, ply)
@@ -13,7 +13,7 @@ net.Receive("PSTATS_AskOpenStats", function(len, ply)
   net.Send(ply)
 end)
 
-net.Receive("PSTATS_OpenStatsOther", function(len, ply)
+net.Receive("PSTATS_AskOpenStatsOther", function(len, ply)
   if not IsValid(ply) then return end
 
   local playerFound = net.ReadEntity()

@@ -12,7 +12,7 @@ local function OpenStats()
   Frame = vgui.Create("DFrame")
   Frame:SetPos(50, 50)
   Frame:SetSize(500, 100)
-  Frame:SetTitle(not otherPlayer and "Your statistics" or otherPlayer and otherPlayer.."'s statistics")
+	Frame:SetTitle(string.len(otherPlayer) == 0 and "Your statistics" or string.len(otherPlayer) > 0 and otherPlayer.."'s statistics")
   Frame:MakePopup()
   Frame:Center()
 
@@ -49,7 +49,7 @@ concommand.Add("pstats_stats", function(ply, cmd, args, argStr)
 
 		if not found then print("Player not found!") return end
 
-		net.Start("PSTATS_OpenStatsOther")
+		net.Start("PSTATS_AskOpenStatsOther")
 		net.WriteEntity(foundPly)
 		net.SendToServer()
 		return
