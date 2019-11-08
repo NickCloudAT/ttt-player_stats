@@ -57,7 +57,24 @@ concommand.Add("pstats_stats", function(ply, cmd, args, argStr)
 
 	net.Start("PSTATS_AskOpenStats")
 	net.SendToServer()
-end, function(cmd, args) return player.GetHumans() end)
+end, function(cmd, args)
+	local tbl = {}
+
+	args = string.Trim(args)
+	args = string.lower(args)
+
+	for k,v in ipairs(player.GetHumans()) do
+		local nick = v:Nick()
+		if string.find(string.lower(nick), args) then
+			nick = "\"" .. nick .. "\""
+			nick = cmd .. " " .. nick
+
+			table.insert(tbl, nick)
+		end
+	end
+
+	return tbl
+end)
 
 hook.Add("Initialize", "PSTATS_KEY_BIND", function()
 	bind.Register("pstats_open_stats", function()
