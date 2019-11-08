@@ -7,7 +7,7 @@ local weapon_tbl = {}
 
 local function OpenStats()
   local statsTable = net.ReadTable()
-	local otherPlayer = net.ReadString()
+  local otherPlayer = net.ReadString()
 
   Frame = vgui.Create("DFrame")
   Frame:SetPos(50, 50)
