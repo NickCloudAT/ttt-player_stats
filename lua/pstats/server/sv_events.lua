@@ -3,7 +3,7 @@ if not SERVER then return end
 hook.Add("PlayerDeath", "PSTATS_DEATH", function(ply, inflictor, attacker)
   if GetRoundState() ~= ROUND_ACTIVE then return end
 
-  if not IsValid(ply) or ply:IsBot() then return end
+  if not IsValid(ply) or ply:IsBot() or not ply:IsTerror() then return end
 
   PSTATS_DATA:AddDeaths(ply:SteamID64(), 1)
 

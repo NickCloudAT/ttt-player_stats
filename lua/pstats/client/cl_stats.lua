@@ -8,11 +8,16 @@ local weapon_tbl = {}
 local function OpenStats()
   local statsTable = net.ReadTable()
   local otherPlayer = net.ReadString()
+  local isOther = net.ReadBool()
 
   Frame = vgui.Create("DFrame")
   Frame:SetPos(50, 50)
   Frame:SetSize(500, 100)
-	Frame:SetTitle(string.len(otherPlayer) == 0 and "Your statistics" or string.len(otherPlayer) > 0 and otherPlayer.."'s statistics")
+	if isOther then
+		Frame:SetTitle(otherPlayer .. "'s statistics")
+	else
+		Frame:SetTitle("Your statistics")
+	end
   Frame:MakePopup()
   Frame:Center()
 
@@ -30,6 +35,37 @@ local function OpenStats()
 
 end
 net.Receive("PSTATS_OpenStats", OpenStats)
+
+local function OpenStatsAll()
+  local statsTable = net.ReadTable()
+
+  Frame = vgui.Create("DFrame")
+  Frame:SetPos(50, 50)
+  Frame:SetSize(500, 300)
+	Frame:SetTitle("Online Statistics")
+  Frame:MakePopup()
+  Frame:Center()
+
+  list = vgui.Create("DListView", Frame)
+  list:SetSize(500, 275)
+  list:SetPos(0, 25)
+
+  list:AddColumn("Player")
+  list:AddColumn("Kills")
+  list:AddColumn("Headshots")
+  list:AddColumn("K/D")
+  list:AddColumn("Deaths")
+  list:AddColumn("Wins")
+
+	for p in pairs(statsTable) do
+		local plyName = player.GetBySteamID64(p):Nick()
+
+		list:AddLine(plyName, statsTable[p].kills, statsTable[p].headshots, math.Round(statsTable[p].kills/statsTable[p].deaths, 2), statsTable[p].deaths, statsTable[p].wins)
+
+	end
+
+end
+net.Receive("PSTATS_OpenStatsAll", OpenStatsAll)
 
 
 concommand.Add("pstats_stats", function(ply, cmd, args, argStr)
@@ -74,6 +110,11 @@ end, function(cmd, args)
 	end
 
 	return tbl
+end)
+
+concommand.Add("pstats_allstats", function(ply)
+	net.Start("PSTATS_AskOpenStatsAll")
+	net.SendToServer()
 end)
 
 hook.Add("Initialize", "PSTATS_KEY_BIND", function()
