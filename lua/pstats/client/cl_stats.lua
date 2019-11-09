@@ -17,7 +17,7 @@ local function OpenStats()
 	if isOther then
 		Frame:SetTitle(otherPlayer .. "'s Statistics")
 	else
-		Frame:SetTitle("Your statistics")
+		Frame:SetTitle("Your Statistics")
 	end
   Frame:MakePopup()
   Frame:Center()
