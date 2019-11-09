@@ -15,7 +15,7 @@ local function OpenStats()
   Frame:SetPos(50, 50)
   Frame:SetSize(500, 100)
 	if isOther then
-		Frame:SetTitle(otherPlayer .. "'s statistics")
+		Frame:SetTitle(otherPlayer .. "'s Statistics")
 	else
 		Frame:SetTitle("Your statistics")
 	end
@@ -77,7 +77,7 @@ local function OpenStatsChooser()
 	Frame:Center()
 
 	button_own = vgui.Create("DButton", Frame)
-	button_own:SetText("Own Stats")
+	button_own:SetText("Own Statistics")
 	button_own:SetFont("PSTATS_Def")
 	button_own:SetPos(25, 50)
 	button_own:SetSize(250, 50)
@@ -88,7 +88,7 @@ local function OpenStatsChooser()
 	end
 
 	button_all = vgui.Create("DButton", Frame)
-	button_all:SetText("Online Stats")
+	button_all:SetText("Online Statistics")
 	button_all:SetFont("PSTATS_Def")
 	button_all:SetPos(25, 150)
 	button_all:SetSize(250, 50)
