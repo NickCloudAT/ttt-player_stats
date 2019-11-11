@@ -25,6 +25,7 @@ hook.Add("TTTEndRound", "PSTATS_WIN", function(result)
       PSTATS_DATA:AddWins(v:SteamID64(), 1)
     end
   end
+  PSTATS_DATA:UpdateAll()
 end)
 
 hook.Add("PlayerDisconnected", "PSTATS_HANDLE_QUIT", function(ply)
