@@ -2,8 +2,10 @@ if not SERVER then return end
 
 util.AddNetworkString("PSTATS_AskOpenStats")
 util.AddNetworkString("PSTATS_AskOpenStatsOther")
+util.AddNetworkString("PSTATS_AskOpenStatsOnline")
 util.AddNetworkString("PSTATS_AskOpenStatsAll")
 util.AddNetworkString("PSTATS_OpenStats")
+util.AddNetworkString("PSTATS_OpenStatsOnline")
 util.AddNetworkString("PSTATS_OpenStatsAll")
 
 
@@ -29,10 +31,10 @@ net.Receive("PSTATS_AskOpenStatsOther", function(len, ply)
   net.Send(ply)
 end)
 
-net.Receive("PSTATS_AskOpenStatsAll", function(len, ply)
+net.Receive("PSTATS_AskOpenStatsOnline", function(len, ply)
   if not IsValid(ply) then return end
 
-  net.Start("PSTATS_OpenStatsAll")
+  net.Start("PSTATS_OpenStatsOnline")
   net.WriteTable(PSTATS_DATA.cache_table)
   net.Send(ply)
 end)

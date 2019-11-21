@@ -27,6 +27,7 @@ local function query( str, callback )
 	end
 
 	q:start()
+
 end
 
 function db:onConnected()
@@ -48,7 +49,7 @@ db:connect()
 
 table.insert( queue, { "SHOW TABLES LIKE 'pstats'", function( data )
 	if table.Count( data ) < 1 then -- the table doesn't exist
-		query( "CREATE TABLE pstats (player BIGINT UNSIGNED NOT NULL, kills INTEGER UNSIGNED NOT NULL, headshots INTEGER UNSIGNED NOT NULL, deaths INTEGER UNSIGNED NOT NULL, wins INTEGER UNSIGNED NOT NULL)", function( data )
+		query( "CREATE TABLE pstats (player BIGINT UNSIGNED NOT NULL, kills INTEGER UNSIGNED NOT NULL, headshots INTEGER UNSIGNED NOT NULL, deaths INTEGER UNSIGNED NOT NULL, wins INTEGER UNSIGNED NOT NULL, lastname VARCHAR(64) UNSIGNED NOT NULL)", function( data )
 			print( "PSTATS > Sucessfully created table!" )
 		end )
 	end
@@ -56,15 +57,16 @@ end } )
 
 function PSTATS_DATA.MYSQL:PlayerJoined(ply)
   local uid = ply:SteamID64()
-	
+
   query("SELECT kills, headshots, deaths, wins FROM pstats WHERE player = " .. uid, function(data)
     if table.Count( data ) <= 0 then
-      query("INSERT into pstats (player, kills, headshots, deaths, wins) VALUES (" .. uid .. ", 0, 0, 0, 0)", function()
+      query("INSERT into pstats (player, kills, headshots, deaths, wins, lastname) VALUES (" .. uid .. ", 0, 0, 0, 0, '" .. ply:Nick() .. "')", function()
           print("PSTATS > Successfully created player " .. ply:Nick())
         end)
     end
 
 		if IsValid(ply) then
+			query("UPDATE pstats SET lastname='" .. ply:Nick() .. "' WHERE player='" .. ply:SteamID64() .. "'", function() end)
 			PSTATS_DATA:CachePlayer(ply:SteamID64(), data)
 	  end
 
@@ -113,3 +115,35 @@ end
 function PSTATS_DATA.MYSQL:SetWins(id64, value)
   query("UPDATE pstats SET wins = " .. value .. " WHERE player = " .. id64 .. ";", function(data)end)
 end
+
+
+----
+
+net.Receive("PSTATS_AskOpenStatsAll", function(len, ply)
+  if not IsValid(ply) then return end
+
+  local co = coroutine.create(function()
+
+		query("SELECT player, kills, headshots, deaths, wins, lastname FROM pstats", function(data)
+			local stats_table = {}
+			for i=1, #data do
+				local p_stats = {
+					kills = data[i].kills,
+					headshots = data[i].headshots,
+					deaths = data[i].deaths,
+					wins = data[i].wins,
+					lastname = data[i].lastname
+				}
+				stats_table[tostring(data[i].player)] = p_stats
+			end
+
+			net.Start("PSTATS_OpenStatsAll")
+			net.WriteTable(stats_table)
+			net.Send(ply)
+		end)
+
+  end)
+
+  coroutine.resume(co)
+
+end)
