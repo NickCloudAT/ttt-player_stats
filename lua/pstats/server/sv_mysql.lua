@@ -138,7 +138,7 @@ net.Receive("PSTATS_AskOpenStatsAll", function(len, ply)
 			end
 
 			net.Start("PSTATS_OpenStatsAll")
-			net.WriteTable(stats_table)
+			net.WriteString(util.Compress(util.TableToJSON(stats_table)))
 			net.Send(ply)
 		end)
 

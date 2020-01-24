@@ -70,7 +70,7 @@ end
 net.Receive("PSTATS_OpenStatsOnline", OpenStatsOnline)
 
 local function OpenStatsAll()
-  local statsTable = net.ReadTable()
+  local statsTable = util.JSONToTable(util.Decompress(net.ReadString()))
 
   Frame = vgui.Create("DFrame")
   Frame:SetPos(50, 50)

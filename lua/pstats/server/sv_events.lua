@@ -11,17 +11,18 @@ hook.Add("PlayerDeath", "PSTATS_DEATH", function(ply, inflictor, attacker)
 
   if not attacker:IsTerror() or attacker == ply then return end
 
-  PSTATS_DATA:AddKills(attacker:SteamID64(), 1)
-
   if(ply:LastHitGroup() == HITGROUP_HEAD) then
     PSTATS_DATA:AddHeadshots(attacker:SteamID64(), 1)
+    return
   end
+
+    PSTATS_DATA:AddKills(attacker:SteamID64(), 1)
 
 end)
 
 hook.Add("TTTEndRound", "PSTATS_WIN", function(result)
   for k, v in ipairs(player.GetAll()) do
-    if v:GetTeam() == result and not v:GetForceSpec() then
+    if v:GetTeam() == result and not v:GetForceSpec() and v:Alive() then
       PSTATS_DATA:AddWins(v:SteamID64(), 1)
     end
   end
