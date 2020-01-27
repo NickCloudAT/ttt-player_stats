@@ -32,7 +32,7 @@ local function OpenStats()
   list:AddColumn("Deaths")
   list:AddColumn("Wins")
 
-  list:AddLine(statsTable.kills, statsTable.headshots, math.Round(statsTable.kills/statsTable.deaths, 2), statsTable.deaths, statsTable.wins)
+  list:AddLine(statsTable.kills, statsTable.headshots, math.Round((statsTable.kills+statsTable.headshots)/statsTable.deaths, 2), statsTable.deaths, statsTable.wins)
 
 end
 net.Receive("PSTATS_OpenStats", OpenStats)
@@ -62,7 +62,7 @@ local function OpenStatsOnline()
 		if not player.GetBySteamID64(p) then continue end
 		local plyName = player.GetBySteamID64(p):Nick()
 
-		list:AddLine(plyName, statsTable[p].kills, statsTable[p].headshots, math.Round(statsTable[p].kills/statsTable[p].deaths, 2), statsTable[p].deaths, statsTable[p].wins)
+		list:AddLine(plyName, statsTable[p].kills, statsTable[p].headshots, math.Round((statsTable[p].kills+statsTable[p].headshots)/statsTable[p].deaths, 2), statsTable[p].deaths, statsTable[p].wins)
 
 	end
 
@@ -94,7 +94,7 @@ local function OpenStatsAll()
 	for p in pairs(statsTable) do
 		local plyName = statsTable[p].lastname or "NOT FOUND"
 
-		list:AddLine(plyName, statsTable[p].kills, statsTable[p].headshots, math.Round(statsTable[p].kills/statsTable[p].deaths, 2), statsTable[p].deaths, statsTable[p].wins)
+		list:AddLine(plyName, statsTable[p].kills, statsTable[p].headshots, math.Round((statsTable[p].kills+statsTable[p].headshots)/statsTable[p].deaths, 2), statsTable[p].deaths, statsTable[p].wins)
 
 	end
 
