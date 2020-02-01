@@ -66,6 +66,8 @@ function PSTATS_DATA.MYSQL:PlayerJoined(ply)
     end
 
 		if IsValid(ply) then
+			local nick_name = ply:Nick()
+			nick_name = string.find(nick_name, "'", 1, true) and "invalid" or nick_name
 			query("UPDATE pstats SET lastname='" .. ply:Nick() .. "' WHERE player='" .. ply:SteamID64() .. "'", function() end)
 			PSTATS_DATA:CachePlayer(ply:SteamID64(), data)
 	  end
