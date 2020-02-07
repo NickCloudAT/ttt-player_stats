@@ -30,7 +30,7 @@ hook.Add("TTTEndRound", "PSTATS_WIN", function(result)
 end)
 
 hook.Add("PlayerDisconnected", "PSTATS_HANDLE_QUIT", function(ply)
-  if not IsValid(ply) or ply:IsBot() or not PSTATS_DATA:IsCached(ply:SteamID64()) then return end
+  if not IsValid(ply) or ply:IsBot() or not PSTATS_DATA:IsCached(ply:SteamID64()) or not ply:IsConnected() then return end
 
   PSTATS_DATA:UpdatePlayer(ply:SteamID64())
 
