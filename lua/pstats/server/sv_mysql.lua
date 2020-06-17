@@ -60,7 +60,10 @@ function PSTATS_DATA.MYSQL:PlayerJoined(ply)
 
   query("SELECT kills, headshots, deaths, wins FROM pstats WHERE player = " .. uid, function(data)
     if table.Count( data ) <= 0 then
-      query("INSERT into pstats (player, kills, headshots, deaths, wins, lastname) VALUES (" .. uid .. ", 0, 0, 0, 0, '" .. ply:Nick() .. "')", function()
+		  local nick_name = ply:Nick()
+		  local pos = string.find(nick_name, "'", 1, true)
+		  nick_name = pos ~= nil and "invalid" or nick_name
+			query("INSERT into pstats (player, kills, headshots, deaths, wins, lastname) VALUES (" .. uid .. ", 0, 0, 0, 0, '" .. nick_name .. "')", function()
           print("PSTATS > Successfully created player " .. ply:Nick())
         end)
     end
@@ -68,7 +71,7 @@ function PSTATS_DATA.MYSQL:PlayerJoined(ply)
 		if IsValid(ply) then
 			local nick_name = ply:Nick()
 			local pos = string.find(nick_name, "'", 1, true)
-			nick_name =  pos ~= nil and "invalid" or nick_name
+			nick_name = pos ~= nil and "invalid" or nick_name
 			query("UPDATE pstats SET lastname='" .. nick_name .. "' WHERE player='" .. ply:SteamID64() .. "'", function() end)
 			PSTATS_DATA:CachePlayer(ply:SteamID64(), data)
 	  end
