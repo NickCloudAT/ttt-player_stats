@@ -1,7 +1,7 @@
 if not SERVER then return end
 
 hook.Add("PlayerDeath", "PSTATS_DEATH", function(ply, inflictor, attacker)
-  if GetRoundState() ~= ROUND_ACTIVE then return end
+  if GetRoundState() ~= ROUND_ACTIVE or not PSTATS_DATA:EnoughPlayers() then return end
 
   if not IsValid(ply) or ply:IsBot() or not ply:IsTerror() then return end
 
@@ -21,6 +21,7 @@ hook.Add("PlayerDeath", "PSTATS_DEATH", function(ply, inflictor, attacker)
 end)
 
 hook.Add("TTTEndRound", "PSTATS_WIN", function(result)
+  if not PSTATS_DATA:EnoughPlayers() then return end
   for k, v in ipairs(player.GetAll()) do
     if v:GetTeam() == result and not v:GetForceSpec() and v:Alive() then
       PSTATS_DATA:AddWins(v:SteamID64(), 1)

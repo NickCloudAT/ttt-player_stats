@@ -49,7 +49,7 @@ db:connect()
 
 table.insert( queue, { "SHOW TABLES LIKE 'pstats'", function( data )
 	if table.Count( data ) < 1 then -- the table doesn't exist
-		query( "CREATE TABLE pstats (player BIGINT UNSIGNED NOT NULL, kills INTEGER UNSIGNED NOT NULL, headshots INTEGER UNSIGNED NOT NULL, deaths INTEGER UNSIGNED NOT NULL, wins INTEGER UNSIGNED NOT NULL, lastname VARCHAR(64) UNSIGNED NOT NULL)", function( data )
+		query( "CREATE TABLE pstats (player VARCHAR(64) UNSIGNED NOT NULL, kills INTEGER UNSIGNED NOT NULL, headshots INTEGER UNSIGNED NOT NULL, deaths INTEGER UNSIGNED NOT NULL, wins INTEGER UNSIGNED NOT NULL, lastname VARCHAR(64) UNSIGNED NOT NULL)", function( data )
 			print( "PSTATS > Sucessfully created table!" )
 		end )
 	end
@@ -102,7 +102,6 @@ function PSTATS_DATA.MYSQL:AddWins(id64, value)
   PSTATS_DATA.MYSQL:SetWins(id64, PSTATS_DATA.MYSQL:GetWins(id64)+value)
 end
 
-
 ----
 
 
@@ -120,6 +119,32 @@ end
 
 function PSTATS_DATA.MYSQL:SetWins(id64, value)
   query("UPDATE pstats SET wins = " .. value .. " WHERE player = " .. id64 .. ";", function(data)end)
+end
+
+function PSTATS_DATA.MYSQL:RemovePlayer(id64)
+	query("DELETE FROM pstats WHERE player = " .. id64 .. ";", function(data)end)
+end
+
+function PSTATS_DATA.MYSQL:ClearBanned()
+	query("SELECT player FROM pstats", function(data)
+		local tableSize = table.Count(data)
+
+		local index = 1
+		local removed = 0
+		timer.Create("pstats_delete_timer", 0.03, tableSize, function()
+			local dataTable = data[index]
+			local steamid = dataTable.player
+			local isBanned = ULib.isBanned(steamid, true)
+
+			if isBanned then
+				PSTATS_DATA.MYSQL:RemovePlayer(steamid)
+				removed = removed+1
+				print("Removed: " .. tostring(removed))
+			end
+
+			index = index+1
+		end)
+	end)
 end
 
 
